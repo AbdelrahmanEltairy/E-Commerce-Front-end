@@ -1,44 +1,53 @@
-
+// Select DOM elements
 const cartItemsContainer = document.getElementById('cartItems');
 const subtotalDisplay = document.getElementById('subtotal');
 const discountDisplay = document.getElementById('discount');
 const totalDisplay = document.getElementById('total');
 
-
+// Array to store cart items (with quantities)
 let cartItems = [];
 
 // Function to fetch JSON data and initialize the cart
-async function loadCartItems() {
-    
-        
-        const response =  fetch('https://github.com/HassanAhmed093/E-Commerce-Front-end/blob/main/Json/products.json');
-        const products =  response.json();
-        
-       
-        const selectedProductIds = [3, 12, 10];
-        cartItems = selectedProductIds.map(id => {
-            const product = products.find(p => p.ID === id);
-            return { ...product, quantity: 1 };
-        });
+function loadCartItems() {
+    // Fetch data from the local products.json file
+    fetch('../Json/products.json') // Relative path from cart folder
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok ' + response.status);
+            return response.json(); // Parse JSON
+        })
+        .then(products => {
+            // Simulate cart with selected products (e.g., IDs 3, 12, 10)
+            const selectedProductIds = [3, 12, 10]; // Slim Fit Jeans, Plaid Flannel Shirt, Classic White T-Shirt
+            cartItems = selectedProductIds.map(id => {
+                const product = products.find(p => p.ID === id);
+                return product ? { ...product, quantity: 1 } : null;
+            }).filter(item => item !== null); // Filter out null if product not found
 
+            // Check if cartItems is populated
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = '<p>No items in cart.</p>';
+                return;
+            }
+
+            // Display cart items
+            displayCartItems();
+            // Update total
+            updateTotal();
         
-        displayCartItems();
-       
-        updateTotal();
-    
-}
+       })};
 
 
+// Function to display cart items in the DOM
 function displayCartItems() {
- 
+    // Clear current items
     cartItemsContainer.innerHTML = '';
 
-    
+    // Loop through cart items and create HTML for each
     cartItems.forEach((item, index) => {
         const cartItem = document.createElement('div');
         cartItem.classList.add('cart-item');
         cartItem.innerHTML = `
-            <img src="${item.Image}" alt="${item.Name}">
+            <img src="https://via.placeholder.com/80x80?text=${item.Name.replace('#', '')}" alt="${item.Name}">
             <div class="item-details">
                 <h3>${item.Name}</h3>
                 <p>${item.Details}</p>
