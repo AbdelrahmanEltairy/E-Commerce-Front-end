@@ -153,6 +153,7 @@ header {
 }
 
 .checkout-btn:hover {
+<<<<<<< HEAD
     background-color: #333;
 }
 
@@ -172,3 +173,8 @@ header {
         margin-left: 0;
     }
 } */
+=======
+    background-color:darkslategrey
+}
+
+>>>>>>> upstream/HEAD
